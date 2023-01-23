@@ -1,0 +1,23 @@
+server:
+  ingress:
+    # -- Enable an ingress resource for the Argo CD server
+    enabled: true
+    # # -- Additional ingress annotations
+    annotations: #{}
+      helm.sh/hook: post-install
+      nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    # # -- Defines which ingress controller will implement the resource
+    ingressClassName: "nginx"
+
+    # # -- List of ingress hosts
+    # ## Argo Ingress.
+    # ## Hostnames must be provided if Ingress is enabled.
+    # ## Secrets must be manually created in the namespace
+    hosts:
+      - argocd-ui
+      - argo-cd-liz.duckdns.org
+## Argo Configs
+configs:
+  # General Argo CD configuration
+  params:
+    server.insecure: true    
