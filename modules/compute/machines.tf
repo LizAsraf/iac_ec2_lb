@@ -14,6 +14,8 @@ resource "aws_instance" "ec2" {
   count = length(var.subnet) * var.instances_per_subnet
   iam_instance_profile = aws_iam_instance_profile.profile.name
   subnet_id      = element(var.subnet, count.index)
+  user_data = file("first_deployment.sh")
+  user_data_replace_on_change = "true"
   key_name = var.keyname
   security_groups =  [var.security_groups]
   tags = merge(
@@ -30,4 +32,10 @@ resource "aws_instance" "ec2" {
   )
 }
 
+resource "null_resource" "first_deployment" {
+  provisioner "local-exec" {
+    command = "${path.module}/first_deployment.sh"
+  }
+  depends_on = [aws_instance.ec2]
+}
 
